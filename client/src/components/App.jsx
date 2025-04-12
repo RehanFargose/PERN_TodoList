@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-// import './App.css'
 import InputTodos from './inputTodos';
 import ListTodos from './listTodos';
 import axios from 'axios';
@@ -7,6 +6,7 @@ import axios from 'axios';
 
 export default function App() {
   // api url from .env
+  // vite has separate way to import env variables
   const API_URL = import.meta.env.VITE_API_URL;
 
   // useState const for list of all todos
@@ -44,8 +44,8 @@ export default function App() {
 
 
 
-  // Add a new todo item to the db, when add button is clicked
-  async function updateTodoList(newTodo){
+  // Add a new todo item to the db, when add button is clicked & update list of todos
+  async function createTodo(newTodo){
     try {
       // Retrieve the newTodo object passed from inputTodos button and pass to api url
       const response = await axios.post(API_URL+"/create", newTodo);
@@ -82,6 +82,40 @@ export default function App() {
   }
 
 
+  // function to edit todo item
+  async function editTodo(editedTodo) {
+    try {
+      // Destructure the updated todo item object and extract its data for url and body parsing
+      // So that db can edit it
+      const {todo_id: ogID, title: updatedTitle, content: updatedContent} = editedTodo;
+      
+      // Created a todo object consisting only of title and content, to be passed as json body to backend api endpt
+      const updatedTodoData = {
+        "title": updatedTitle,
+        "content": updatedContent
+      };
+
+      console.log("Trying to edit stuff");
+      // console.log(updatedTitle);
+      // console.log(updatedContent);
+      console.log(updatedTodoData);
+      
+      
+      const editResponse = await axios.put(API_URL+"/edit/"+ogID, updatedTodoData);
+
+      const update = editResponse.data;
+      console.log("Edit response from db is: ");
+      console.log(update);
+
+      // Get all the todos again, even the updated ones
+      getTodos();
+
+    } catch (error) {
+        console.error(error.message);
+        
+    }
+  }
+
   return (
     <div className="container">
 
@@ -89,15 +123,16 @@ export default function App() {
     <form className="">
     <h1 className="text-center mt-5">PERN TodoList</h1>
 
-    <InputTodos addTodo={updateTodoList}/>    
+    {/* The main input field to create new Todo items */}
+    <InputTodos addTodo={createTodo}/>    
 
     </form>
 
-
     {/* Display all the todos */}
-    {/* Use elem.todo_id which is PK in DB to eventually create delete and edit functionality */}
+    {/* Use elem.todo_id which is PK in DB to eventually create delete and edit functionality, also pass full elem for edit functionality */}
     {todos.map((elem, index)=>(
-      <ListTodos key={index} id={elem.todo_id} title={elem.title} content={elem.content} delFunc={delTodo}/>
+      <ListTodos key={index} id={elem.todo_id} title={elem.title} 
+      content={elem.content} delFunc={delTodo} editFunc={editTodo} todoItem={elem}/>
       ))}
 
   </div>

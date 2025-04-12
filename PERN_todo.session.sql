@@ -1,1 +1,1 @@
-SELECT * FROM todo; 
+SELECT * FROM todo ORDER BY todo_id ASC; 

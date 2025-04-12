@@ -24,7 +24,7 @@ app.use(cors());
 async function getAll() {
     try {
         // const todoList = await pool.query("SELECT title, content FROM todo");
-        const todoList = await pool.query("SELECT * FROM todo");
+        const todoList = await pool.query("SELECT * FROM todo ORDER BY todo_id ASC;");
 
         const myTodos = todoList.rows;
         return myTodos;
@@ -119,8 +119,13 @@ async function updateTodo(newTitle, newContent, id) {
 app.put("/edit/:id", async(req, res)=>{
     try {
         const todoID = req.params.id;
-        const newTitle = req.body.title;
-        const newContent = req.body.content;       
+        // Destructuring is done as followes:
+        // const {ogkey1: newconst1, ogkey2: newconst2} = og_object;
+        const {title: newTitle, content: newContent} = req.body;
+
+
+        // const newTitle = req.body.title;
+        // const newContent = req.body.content;       
 
         const updateResponse = await updateTodo(newTitle, newContent, todoID);
         console.log("Todo with id: "+todoID+" was updated!");

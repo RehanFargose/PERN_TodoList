@@ -25,14 +25,12 @@ export default function InputTodos(props){
             }
         });
 
-
-
         
     }
 
     // Return html-jsx code
     return (
-        <div>
+        <>
             <input className="form-control mt-3" type="text" placeholder="Enter the title" name="title" value={currentTodo.title} onChange={handleChange}></input>
             <input className="form-control mt-3" type="text" placeholder="Enter the content" name="content" value={currentTodo.content} onChange={handleChange}></input>
 
@@ -40,8 +38,8 @@ export default function InputTodos(props){
                 // Prevent the page from abruptly refreshing and losing the new data
                 event.preventDefault();
 
-                // props.changeH1();
-
+                // need to pass the id when we are using edit function
+                
                 props.addTodo(currentTodo);
 
                 // After adding todos, set them to empty fields for next values to be entered
@@ -50,7 +48,7 @@ export default function InputTodos(props){
                 }}>
             Add Todo</button>
 
-        </div>
+        </>
 
     );
 
