@@ -23,7 +23,9 @@ app.use(cors());
 // async function to query db and get all todos
 async function getAll() {
     try {
-        const todoList = await pool.query("SELECT * FROM todo")
+        // const todoList = await pool.query("SELECT title, content FROM todo");
+        const todoList = await pool.query("SELECT * FROM todo");
+
         const myTodos = todoList.rows;
         return myTodos;
     } catch (error) {

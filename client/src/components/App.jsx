@@ -1,34 +1,67 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // import './App.css'
 import InputTodos from './inputTodos';
 import ListTodos from './listTodos';
-import 'dotenv/config';
+import axios from 'axios';
+
 
 export default function App() {
-  const API_URL = process.env.api_url;
+  // api url from .env
+  const API_URL = import.meta.env.VITE_API_URL;
 
-  const [todos, setTodos] = useState([{title: "Dairy",
-    content: "Get milk, yoghurt & cheese"
-  }]);
+  // useState const for list of all todos
+  const [todos, setTodos] = useState([]);
+  
+
+  // Function to retrieve all todoitems from db
+  async function getTodos() {
+    try {
+      const response = await axios.get(API_URL+"/todos");
+      console.log("The list of todos from db is: ");
+      const todosList = response.data;
+      console.log(todosList);
+      
+      // Display in the front end
+      setTodos((prevTodo)=>{
+        return todosList;
+      });
+
+    } catch (error) {
+      
+    }
+  }
+
+  // useEffect hook to retrieve and display all Todos during 1st load and page refresh
+  useEffect(()=>{
+    // Call the function to display list in the beggining
+    getTodos();
+  }, []);
 
 
-  // Add a new todo item to the db
+
+  // Add a new todo item to the db, when add button is clicked
   async function updateTodoList(newTodo){
+    try {
+      // Retrieve the newTodo object passed from inputTodos button and pass to api url
+      const response = await axios.post(API_URL+"/create", newTodo);
+      const allTodos = response.data;
+      console.log(allTodos);
 
+      // api endpt to get all posts stored in db
+      // const getresp = await getTodos();
+      getTodos();
 
-
-
-    // setTodos((prevTodo)=>{
-    //   return [...prevTodo, newTodo];
-    // });
+    } catch (error) {
+        console.error(error.message); 
+    }
 
   }
 
-  // // Testing useState and prevent default
-  // const [name, setName] = useState("");
-  // function addHeading(){
-  //   setName("Rehan");
-  // }
+
+  // function to get id and delete a todo item from db
+  async function delTodo(todoID) {
+    
+  }
 
 
   return (
@@ -38,19 +71,14 @@ export default function App() {
     <form className="">
     <h1 className="text-center mt-5">PERN TodoList</h1>
 
-    <InputTodos changeH1={addHeading} addTodo={updateTodoList}/>    
+    <InputTodos addTodo={updateTodoList}/>    
 
     </form>
 
 
     {/* Display all the todos */}
-      {todos.map((elem, index)=>
-      //  return <div key={index} id={index}> 
-      //   <h3>{elem.title}</h3>
-      //   <p>{elem.content}</p>
-      //  </div> 
-      (<ListTodos key={index} id={index} title={elem.title} content={elem.content}/>)
-      )}
+    {/* Use elem.todo_id which is PK in DB to eventually create delete and edit functionality */}
+    {todos.map((elem, index)=>(<ListTodos key={index} id={elem.todo_id} title={elem.title} content={elem.content}/>))}
 
   </div>
   )

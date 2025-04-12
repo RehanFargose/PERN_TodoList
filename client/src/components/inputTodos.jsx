@@ -1,10 +1,8 @@
 import React from "react";
 import { useState } from "react";
-import 'dotenv/config';
-
+import axios from "axios";
 
 export default function InputTodos(props){
-    const API_URL = process.env.api_url;
 
     // const to track todoItem state
     const [currentTodo, setTodoItem] = useState({title: "",
@@ -26,6 +24,10 @@ export default function InputTodos(props){
                 [name]: value
             }
         });
+
+
+
+        
     }
 
     // Return html-jsx code
