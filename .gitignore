@@ -7,11 +7,14 @@ yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
 
+<<<<<<< HEAD
 
 # Ignoring my personal files
 /solution.js
 /.env
 
+=======
+>>>>>>> 454ae76e77d3ddde22bdd36b382ea592c3c62dd8
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
@@ -138,4 +141,8 @@ dist
 .yarn/unplugged
 .yarn/build-state.yml
 .yarn/install-state.gz
+<<<<<<< HEAD
 .pnp.*
+=======
+.pnp.*
+>>>>>>> 454ae76e77d3ddde22bdd36b382ea592c3c62dd8
